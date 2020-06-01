@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 import tkinter
 from sniffer import sniffer
-ventana = tkinter.Tk()
 
+ventana = tkinter.Tk()
+ventana.title('My Litle Sniffer')
 class ingreso:
     def __init__(self,ventana):
         self.cajaIface = tkinter.Entry(ventana)
@@ -23,11 +24,9 @@ class ingreso:
 
     def guardarIface(self):
         self.iface = self.cajaIface.get()
-        print(self.iface)
 
     def guardar_n_pkts(self):
         self.n_pkts = int(self.caja_n_pkts.get())
-        print(self.n_pkts)
 
     def guardar_todo(self):
         self.guardarIface()
@@ -38,20 +37,13 @@ class ingreso:
     def set_sniffer(self):
         self.snif = sniffer(self.iface, self.n_pkts)
         self.snif.sniff()
-        self.snif.mostrar_general()
         self.lista = self.snif.formato()
-        print(self.lista)
 
     def set_tabla(self,ventana):
         total_rows = len(self.lista)
         total_columns = len(self.lista[0])
         self.tabla= Table(ventana, total_rows, total_columns,self.lista, self.snif)
     
-    def snif_info(self):
-        print(self.snif.pkts)
-    
-    def hola(self,n):
-        print("hola ", n)
 
 class Table: 
     def __init__(self,root, total_rows, total_columns,lst, sniffer): 
@@ -71,7 +63,7 @@ class Table:
             for j in range(total_columns): 
                   
                 self.e = tkinter.Entry(root, width=20, fg='blue', 
-                               font=('Arial',16,'bold')) 
+                               font=('Arial',16)) 
                   
                 self.e.grid(row=i+3, column=j)
                 self.e.insert(tkinter.END, lst[i][j]) 
@@ -81,10 +73,6 @@ class Table:
             self.boton.grid(row=i+3,column=j+1)
             self.boton2.grid(row=i+3,column=j+2)
 
-    def create_window():
-        window = tkinter.Toplevel(root)
-    def hola():
-        print('hola')
 def main():
     i = ingreso(ventana)
     ventana.mainloop()

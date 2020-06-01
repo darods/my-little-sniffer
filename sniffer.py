@@ -18,7 +18,6 @@ class sniffer:
         print(self.pkts)
 
     def mostrar_individual(self,n,root):
-        print(self.pkts[n].summary())
         window = tkinter.Toplevel(root)
         label = tkinter.Label(window, text =self.pkts[n].summary())
         label.pack()
@@ -34,7 +33,8 @@ class sniffer:
         return claves
     
 
-
+'''
+prueba en interfaz de las funciones de la clase
 def main():
     n=4
     snif = sniffer('enp4s0f2',n)
@@ -50,3 +50,4 @@ def main():
 
 if __name__=="__main__":
     main()
+'''
