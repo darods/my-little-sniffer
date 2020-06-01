@@ -1,35 +1,44 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-:w
+
 import scapy.all as scapy
-import argparse
 
+class sniffer:
+    def __init__(self, iface, n):
+        self.iface = iface
+        self.n = n
+    
+    def sniff(self):
+        self.pkts = scapy.sniff(iface = self.iface, count = self.n)
+        return self.pkts
+    
+    def mostrar_general(self):
+        print('este es un resumen de los paquetes:\n')
+        print(self.pkts)
 
-def get_interface():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--interface", dest="interface", help="Especifica el dispositivo para hacer sniffing")
-    arguments = parser.parse_args()
-    return arguments.interface
+    def mostrar_individual(self,n):
+        print(self.pkts[n].summary())
+    
+    def formato(self):
+        claves=[]
+        for i in range (self.n):
+            info = [self.pkts[i].src, self.pkts[i].dst]
+            claves.append(info)
+        return claves
 
-def sniff(iface):
-    n = int(input('¿cuantos paquetes quiere obtener?'))
-    pkts = scapy.sniff(iface = iface, count = n)
-    return pkts
-
-def mostrar_general(pkts):
-    print('este es un resumen de los paquetes:\n')
-    print(pkts)
-
-def mostrar_individual(pkts,n):
-    print(pkts[n].summary())
 
 def main():
-    iface = get_interface()
-    pkts = sniff(iface)
-    mostrar_general(pkts)
-    band = 1
-    while(band!=0):
-        band = int(input('Desea ver un paquete en especifico? (1 o 0): '))
-        n = int(input('digite el numero del paquete: '))
-        mostrar_individual(pkts, n)
-        
+    n=4
+    snif = sniffer('enp4s0f2',n)
+    snif.sniff()
+    snif.mostrar_general()
+    print('resumen individual\n')
+    for i in range (n):
+        snif.mostrar_individual(i)
+    
+    print(snif.formato())
+
+
+
 if __name__=="__main__":
     main()
