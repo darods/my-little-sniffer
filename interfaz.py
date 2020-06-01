@@ -7,16 +7,18 @@ class ingreso:
     def __init__(self,ventana):
         self.cajaIface = tkinter.Entry(ventana)
         self.caja_n_pkts = tkinter.Entry(ventana)
-
+        
+        self.nombres = tkinter.Label(ventana, text = 'hecho por: Daniel Rodriguez, Valentina Tobo y Jordy Pineda')
         self.etiquetaIface = tkinter.Label(ventana, text = "red: ")
         self.etiqueta_n_pkts = tkinter.Label(ventana, text = "numero de paquetes: ")
-        self.botonIngresar = tkinter.Button(ventana, text="clic", command = self.guardar_todo) 
+        self.botonIngresar = tkinter.Button(ventana, text="ingresar", command = self.guardar_todo) 
         
-        self.etiquetaIface.grid(row=0,column=0)
-        self.cajaIface.grid(row=0, column=1)
-        self.etiqueta_n_pkts.grid(row=0,column=2)
-        self.caja_n_pkts.grid(row=0, column=3)
-        self.botonIngresar.grid(row=0, column=4)
+        self.nombres.grid(row = 0, column=0, columnspan=4)
+        self.etiquetaIface.grid(row=1,column=0)
+        self.cajaIface.grid(row=1, column=1)
+        self.etiqueta_n_pkts.grid(row=1,column=2)
+        self.caja_n_pkts.grid(row=1, column=3)
+        self.botonIngresar.grid(row=1, column=4)
         self.snif = None
 
     def guardarIface(self):
@@ -39,22 +41,31 @@ class ingreso:
         self.snif.mostrar_general()
         self.lista = self.snif.formato()
         print(self.lista)
-        total_rows = len(self.lista)
-        total_columns = len(self.lista[0])
-        print(total_rows)
-        print(total_columns)
-
-    def get_sniffer(self):
-        return self.snif
 
     def set_tabla(self,ventana):
         total_rows = len(self.lista)
         total_columns = len(self.lista[0])
-        self.tabla= Table(ventana, total_rows, total_columns,self.lista)
+        self.tabla= Table(ventana, total_rows, total_columns,self.lista, self.snif)
+    
+    def snif_info(self):
+        print(self.snif.pkts)
+    
+    def hola(self,n):
+        print("hola ", n)
 
 class Table: 
-    def __init__(self,root, total_rows, total_columns,lst): 
+    def __init__(self,root, total_rows, total_columns,lst, sniffer): 
           
+        self.e_fuente = tkinter.Label(ventana, text = "fuente")
+        self.e_dst = tkinter.Label(ventana, text = "destino")
+        self.e_info = tkinter.Label(ventana, text = "mas detalles")
+        self.e_pdf = tkinter.Label(ventana, text = "explicacion")
+
+
+        self.e_fuente.grid(row=2,column=0)
+        self.e_dst.grid(row=2,column=1)
+        self.e_info.grid(row=2,column=2)
+        self.e_pdf.grid(row=2,column=3)
         # code for creating table 
         for i in range(total_rows): 
             for j in range(total_columns): 
@@ -62,23 +73,20 @@ class Table:
                 self.e = tkinter.Entry(root, width=20, fg='blue', 
                                font=('Arial',16,'bold')) 
                   
-                self.e.grid(row=i+1, column=j)
+                self.e.grid(row=i+3, column=j)
                 self.e.insert(tkinter.END, lst[i][j]) 
 
-            self.boton = tkinter.Button(ventana, text="expandir "+str(i+1))
-            self.boton.grid(row=i+1,column=j+1)
+            self.boton = tkinter.Button(ventana, text="mas sobre el paquete "+str(i+1), command = lambda idx = i: sniffer.mostrar_individual(idx,root))
+            self.boton2 = tkinter.Button(ventana, text="explicación paquete ", command= lambda idx = i: sniffer.grafico_pdf(idx))
+            self.boton.grid(row=i+3,column=j+1)
+            self.boton2.grid(row=i+3,column=j+2)
 
+    def create_window():
+        window = tkinter.Toplevel(root)
+    def hola():
+        print('hola')
 def main():
     i = ingreso(ventana)
-    snif = i.get_sniffer()
-    lst = sniffer.formato 
-# find total number of rows and 
-# columns in list 
-    #total_rows = len(lst)
-    #total_columns = len(lst[0])
-
-
-    #t = Table(ventana, total_rows, total_columns,lst)
     ventana.mainloop()
 
 if __name__ == '__main__':

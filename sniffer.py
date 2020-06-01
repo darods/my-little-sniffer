@@ -2,29 +2,37 @@
 # -*- coding: utf-8 -*-:w
 
 import scapy.all as scapy
-
+import tkinter
+from scapy.all import *
 class sniffer:
     def __init__(self, iface, n):
         self.iface = iface
         self.n = n
     
     def sniff(self):
-        self.pkts = scapy.sniff(iface = self.iface, count = self.n)
+        self.pkts = sniff(iface = self.iface, count = self.n)
         return self.pkts
     
     def mostrar_general(self):
         print('este es un resumen de los paquetes:\n')
         print(self.pkts)
 
-    def mostrar_individual(self,n):
+    def mostrar_individual(self,n,root):
         print(self.pkts[n].summary())
+        window = tkinter.Toplevel(root)
+        label = tkinter.Label(window, text =self.pkts[n].summary())
+        label.pack()
     
+    def grafico_pdf(self,n):
+        self.pkts[n].pdfdump()
+
     def formato(self):
         claves=[]
         for i in range (self.n):
             info = [self.pkts[i].src, self.pkts[i].dst]
             claves.append(info)
         return claves
+    
 
 
 def main():
